@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  th:replace="~{admin/layout/index :: dynamic(~{::main})}">
+
+
+<body>
+<main>
+	<div class="row mt">
+		<div class="col-md-12">
+			<div class="content-panel">
+				<h3>
+					&emsp;<i class="fa fa-angle-right"></i> Thông tin chi tiết
+				</h3>
+				<div class="panel-body">
+					<form th:action="@{'/admin/orderpending/edit/' + ${order_id}}" method="post" modelAttribute="ord">
+						<div class="panel-primary">
+							<div class="panel-body-dh">
+								<div class="row">
+									<div class="form-group col-sm-6">
+										<div class="thongtin">Người mua</div>
+										<input name="account.Fullname" id="Fullname" class="form-control" required>
+									</div>
+									<div class="form-group col-sm-6">
+										<div class="thongtin">Ngày đặt hàng</div>
+										<input name="ord.CreateDate" th:value="*{#dates.format(ord.CreateDate, 'yyyy-MM-dd HH:mm')}"
+											   class="form-control" readonly>
+									</div>
+									<div class="form-group col-sm-6">
+										<div class="thongtin">Số điện thoại</div>
+										<input type="phone" id="Phone" class="form-control" required name="Phone">
+									</div>
+
+									<div class="form-group col-sm-6">
+										<div class="thongtin">Tổng tiền</div>
+										<div name="price" class="form-control" readonly th:text="${#numbers.formatDecimal(ord.price, 2, 'COMMA', 0, 'POINT')} + ' đ'"></div>
+									</div>
+
+									<div class="form-group col-sm-6">
+										<div class="thongtin">Tiền nhận từ khách</div>
+										<input name="money_give" id="Money_give" class="form-control" type="number" th:value="${ord.money_give} * 1" required>
+									</div>
+									<div class="form-group col-sm-6">
+										<div class="thongtin">Tiền trả lại khách</div>
+										<div class="form-control" readonly th:text="${#numbers.formatDecimal(ord.money_give - ord.voucher_price - ord.price > 0 ? ord.money_give - ord.price : 0, 2, 'COMMA', 1, 'POINT')} + ' đ'"></div>
+									</div>
+									<div class="form-group col-sm-6">
+										<div class="thongtin">Mã giảm giá</div>
+										<input type="number" th:value="${ord.voucher_price} * 1"
+											   class="form-control" readonly>
+									</div>
+									<div class="form-group col-sm-6">
+										<div class="thongtin">Tổng tiền cần phải trả</div>
+										<div class="form-control" readonly th:text="${#numbers.formatDecimal(ord.price - ord.voucher_price, 2, 'COMMA', 0, 'POINT')} + ' đ'"></div>
+									</div>
+									<div class="form-group col-sm-6">
+										<div class="thongtin">Ghi chú</div>
+										<input name="description" id="Description" class="form-control" th:value="${ord.description}" required>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="form-group col-sm-12">
+										<div class="thongtin">Địa chỉ giao hàng</div>
+										<textarea name="Address" id="Address" class="form-control" required th:text="${ord.Address}"></textarea>
+									</div>
+								</div>
+								<div class="row">
+									<table class="table">
+										<div class="d-flex" style="justify-content: space-between; align-items: end">
+											<h3>
+												&emsp;<i class="fa fa-angle-right"></i> Danh sách sản phẩm đơn hàng
+											</h3>
+											<a th:href="@{'/admin/orderpending/edit/' + ${order_id} + '/add'}" class="btn btn-primary d-flex" style="height: 30px;justify-content: center; align-items: center; margin-right: 20px">Thêm</a>
+										</div>
+										<hr>
+										<thead>
+										<tr>
+											<th><h4>&ensp;Số thứ tự</h4></th>
+											<th><h4>Tên sản phẩm</h4></th>
+											<th><h4>Hình ảnh</h4></th>
+											<th><h4>Số lượng</h4></th>
+											<th><h4>Tổng giá</h4></th>
+											<th></th>
+										</tr>
+										</thead>
+
+										<tbody>
+										<tr class="box pull-up-1" th:each="odt,state:${odetail}">
+											<td>&ensp;&ensp;[[${state.index} +1]]</td>
+
+											<td>[[${odt.product.Name}]]</td>
+											<td><img th:src="@{|/assets/images/${odt.product.Image1}|}"
+													 style="width: 100px; height: 100px;"></td>
+											<td>
+												<input
+														class="form-control input-quantity" style="width: 120px" type="number"
+													   th:value="${odt.Quantity}"
+													   th:attr="data-id=${odt.Orderdetail_id}"
+												>
+											</td>
+											<td>[[${#numbers.formatDecimal(odt.Price , 0 ,
+												'COMMA',0,'POINT')}]] Đ</td>
+											<td>
+												<button class="btn btn-danger btn-del-orderDetail" th:attr="data-id=${odt.Orderdetail_id}">
+													<b class="fa fa-trash"></b>
+												</button>
+											</td>
+										</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+							<div
+									class="panel-footer panel-footer"
+							>
+								<div class="clearfix">
+									<div class="pull-left">
+										<button
+												type="button"
+												class="btn btn-primary"
+												id="btn-payment"
+												th:attr="data-id=${order_id}"
+										>
+											Thanh toán
+										</button>
+									</div>
+									<div class="pull-right" style="margin-left: 20px">
+										<button
+												type="button"
+												class="btn btn-danger"
+												id="btn-cancel"
+												th:attr="data-id=${ord.Order_id}"
+										>
+											Hủy hóa đơn
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+</main>
+</body>
+</html>

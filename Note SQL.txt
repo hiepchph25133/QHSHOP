@@ -1,0 +1,4 @@
+ALTER TABLE orders
+ADD money_give float,
+    voucher_price float,
+    money_send float;

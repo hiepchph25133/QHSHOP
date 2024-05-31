@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Your Title</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+	<style>
+		.modal-lg {
+			max-width: 90% !important;
+		}
+
+		body {
+			font-size: 18px;
+		}
+
+		h1, h2, h3, h4, h5, h6 {
+			font-size: 1.25em;
+		}
+
+		p, a, button, input, select, textarea {
+			font-size: 1em;
+		}
+	</style>
+</head>
+<body>
+<div class="row mt">
+	<div class="col-md-12">
+		<div class="content-panel">
+			<form th:action="@{/admin/order/updateAll}" method="post" onsubmit="return validateQuantities()">
+				<table class="table">
+					<h3>&emsp;<i class="fa fa-angle-right"></i> Danh sách sản phẩm đơn hàng</h3>
+					<hr>
+					<thead>
+					<tr>
+						<th><h4>&ensp;Số thứ tự</h4></th>
+						<th><h4>Tên sản phẩm</h4></th>
+						<th><h4>Hình ảnh</h4></th>
+						<th><h4>Số lượng</h4></th>
+						<th><h4>Giá</h4></th>
+						<th><h4>Xóa</h4></th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr class="box pull-up-1" th:each="odt,state:${odetail}">
+						<td>&ensp;&ensp;[[${state.index} +1]]</td>
+						<td>[[${odt.product.Name}]]</td>
+						<td><img th:src="@{|/assets/images/${odt.product.Image1}|}" style="width: 100px; height: 100px;"></td>
+						<td class="text-center">
+							<input name="quantities" type="number" style="width: 80px" th:value="${odt.Quantity}" min="0"
+								   th:data-max-quantity="${odt.product.Quantity}"
+								   th:data-product-id="${odt.product.Product_id}"
+								   th:data-product-name="${odt.product.Name}">
+							<input type="hidden" name="orderDetailIds" th:value="${odt.Orderdetail_id}">
+						</td>
+						<td>[[${#numbers.formatDecimal(odt.Price , 0 ,'COMMA',0,'POINT')}]] Đ</td>
+						<td class="text-center">
+							<button type="button" class="btn btn-default delete-button" th:attr="data-confirm='Bạn có chắc muốn xóa sản phẩm?'" th:data-url="@{'/admin/order/deleteDetail/' + ${odt.Orderdetail_id}}" th:disabled="${ord.status == 3 || ord.status == 1}">
+								<b class="fa fa-trash"></b>
+							</button>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+				<div class="text-right" style="margin-right: 10px">
+					<button th:if="${ord.Status}>2" type="submit" class="btn btn-round btn-info" disabled="disabled">
+						<span class="glyphicon glyphicon-check"></span> Cập nhập
+					</button>
+
+					<button th:if="${ord.Status}<3" type="submit" class="btn btn-round btn-info">
+						<span class="glyphicon glyphicon-check"></span> Cập nhập
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<button th:if="${ord.Status}>2" disabled="disabled" type="button" class="btn btn-info btn-xs" id="addNewProductBtn" data-toggle="modal" data-target="#addProductModal">
+	<span class="glyphicon glyphicon-plus"></span> Thêm mới
+</button>
+
+<button th:if="${ord.Status}<3" type="button" class="btn btn-info btn-xs" id="addNewProductBtn" data-toggle="modal" data-target="#addProductModal">
+	<span class="glyphicon glyphicon-plus"></span> Thêm mới
+</button>
+
+<div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Thêm mới sản phẩm</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body" id="addProductModalBody">
+			</div>
+		</div>
+	</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+	$(document).ready(function(){
+		$("#addProductModal").on('show.bs.modal', function () {
+			$("#addProductModalBody").load("/admin/order/addProductDetail/page/1");
+		});
+
+		$('.delete-button').on('click', function() {
+			var url = $(this).data('url');
+			var confirmation = confirm($(this).data('confirm'));
+
+			if (confirmation) {
+				$.ajax({
+					type: 'POST',
+					url: url,
+					success: function(response) {
+						location.reload();
+					},
+					error: function(xhr, status, error) {
+						console.error(xhr.responseText);
+					}
+				});
+			}
+		});
+
+		$('form').on('submit', function(e) {
+			if (!validateQuantities()) {
+				e.preventDefault(); // Prevent form submission if validation fails
+			}
+		});
+	});
+
+	function validateQuantities() {
+		var valid = true;
+		$('input[name="quantities"]').each(function() {
+			var quantity = $(this).val();
+			var maxQuantity = $(this).data('max-quantity');
+			var productId = $(this).data('product-id');
+			var productName = $(this).data('product-name');
+
+			console.log("Product ID: ", productId);
+			console.log("Quantity entered: ", quantity);
+			console.log("Max quantity allowed: ", maxQuantity);
+
+			if (parseInt(quantity) > parseInt(maxQuantity)) {
+				alert('Số lượng nhập vào vượt quá số lượng có trong kho cho sản phẩm ' + productName);
+				$(this).val(maxQuantity); // Set the input value to the max quantity
+				valid = false;
+				return false;
+			}
+		});
+		return valid;
+	}
+</script>
+</body>
+</html>

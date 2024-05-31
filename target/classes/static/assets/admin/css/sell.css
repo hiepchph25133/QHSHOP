@@ -1,0 +1,130 @@
+.w-30 {
+    width: 30%;
+}
+.w-70 {
+    width: 70%;
+}
+.error-message{
+    color: red;
+    font-style: italic;
+}
+.code-success,.code-error{
+    right: -24px;
+    position: absolute !important;
+    top: 30px;
+}
+.code-success{
+  color: green;
+}
+.code-error{
+    right: -159px !important;
+    position: relative !important;
+    color: red;
+}
+.element-item{
+    border: 1px solid #0070f4;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 14px 10px;
+    height: 99px;
+    margin-bottom:10px;
+    margin-right: 10px;
+    width: 160px;
+}
+.container-fluid {
+    background: #f0f1f3;
+    /* height: 100vh; */
+}
+.cart-left,
+.cart-right {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+}
+.list-items,
+.table-responsive {
+    max-height: 80vh;
+    min-height: 80vh;
+}
+.list-items{
+    padding: 16px;
+}
+.search-container,
+.note-container {
+    width: 100%;
+    position: relative;
+    display: inline-block;
+}
+
+.search-item,
+.note-item {
+    max-width: 200px;
+    width: 100%;
+    padding: 10px 30px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.search-boxs{
+    max-width: 100% !important;
+}
+.search-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: #999;
+    cursor: pointer;
+}
+.pencil-icon {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #999;
+    cursor: pointer;
+}
+.table .tr {
+    background: #f4f4f4;
+    color: #000;
+    font-weight: 400;
+    font-size: larger;
+    border-radius: 6px;
+}
+.cart-body {
+    min-height:100vh;
+    padding: 10px;
+}
+.item-price {
+    font-size: 13px;
+    color: #0070f4;
+}
+.amount{
+    font-size: 16px;
+    color: #0070f4;
+}
+.panel-footer{
+    background-color: white;
+}
+.item-img {
+    margin-right: 15px;
+}
+.btn-icon {
+    width: 2.4rem;
+    height: 2.4rem;
+    background: #e1e3e6;
+    border-radius: 50%;
+    border: none;
+}
+.number-pages {
+    margin: 0 0.8rem;
+}
+.list-pagination{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+}
+.d-flex{
+    display: flex;
+}

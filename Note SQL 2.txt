@@ -1,0 +1,71 @@
+use GoalShop2
+
+CREATE TABLE product_detail (
+    DetailID INT PRIMARY KEY IDENTITY(1,1),
+    ProductID INT FOREIGN KEY REFERENCES Products(Product_id),
+    Description NVARCHAR(MAX),
+	Detail NVARCHAR(MAX),
+    Chip NVARCHAR(50),
+    Ram NVARCHAR(50),
+    Rom NVARCHAR(50),
+    Resolution NVARCHAR(255),
+    Pin NVARCHAR(255),
+);
+
+CREATE TABLE image_product (
+    ID INT PRIMARY KEY IDENTITY(1,1),
+    ProductID INT FOREIGN KEY REFERENCES Products(Product_id),
+    path NVARCHAR(100)
+);
+
+ALTER TABLE Products
+DROP COLUMN Description;
+
+ALTER TABLE Products
+DROP COLUMN Detail;
+
+ALTER TABLE Products
+DROP COLUMN Chip;
+
+ALTER TABLE Products
+DROP COLUMN Ram;
+
+ALTER TABLE Products
+DROP COLUMN Rom;
+
+ALTER TABLE Products
+DROP COLUMN Resolution;
+
+ALTER TABLE Products
+DROP COLUMN Pin;
+
+
+ALTER TABLE Products
+DROP COLUMN Image1;
+
+ALTER TABLE Products
+DROP COLUMN Image2;
+
+ALTER TABLE Products
+DROP COLUMN Image3;
+
+ALTER TABLE Products
+DROP COLUMN Image4;
+
+ALTER TABLE Products
+DROP COLUMN Image5;
+
+ALTER TABLE Products
+DROP COLUMN Image6;
+
+ALTER TABLE Products
+DROP COLUMN Image7;
+
+
+delete from Favorites;
+delete  from Comments;s
+delete from OrderDetails;
+delete from Votes;
+delete from product_detail;
+delete from image_product;
+delete  from Products;

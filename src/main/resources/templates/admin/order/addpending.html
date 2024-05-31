@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/layout/index :: dynamic(~{::main})}">
+
+
+<body >
+<main ng-controller="shopping-cart-sell-ctrl">
+
+  <div class="row cart-body">
+    <div class="cart-left col col-sm-5" style="width: 55%">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <tbody>
+          <tr th:each="odt,state:${odetail}">
+            <td class="text-center" style="width: 20%;"><a href="#"><img
+                    style="width: 60%;" th:src="@{|/assets/images/${odt.product.Image1}|}"></a></td>
+            <td class="text-center">[[${odt.product.Name}]]</td>
+            <td class="text-center">[[${odt.product.Distcount}]]%</td>
+            <td  class="text-center" style="width: 120px">
+              <input style="width: 75%" class="form-control input-quantity" type="number" th:value="${odt.Quantity}" th:attr="data-id=${odt.Orderdetail_id}">
+            </td>
+            <td class="text-center">[[${#numbers.formatDecimal(odt.product.Unit_price , 0 ,
+              'COMMA',2,'POINT')}]] đ</td>
+            <td class="text-center">[[${#numbers.formatDecimal(odt.Price , 0 , 'COMMA',2,'POINT')}]] đ</td>
+            <td class="text-center">
+              <button class="btn btn-danger btn-del-orderDetail" th:attr="data-id=${odt.Orderdetail_id}">
+                <b class="fa fa-trash"></b>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cart-left-footer" style="margin-top: 35px">
+        <div class="clearfix" style=" height: 76px;">
+          <div class="cart-note pull-left">
+            <div class="note-container">
+              <a th:href="@{'/admin/orderpending/edit/' + ${order_id}}" class="btn btn-primary">Quay lại</a>
+            </div>
+          </div>
+          <div class="cart-total pull-right" style="margin-top: 13px;">
+            <h5 class="total-amount">
+              Tổng tiền : <span class="amount">[[${#numbers.formatDecimal(ord.Price , 0 , 'COMMA',2,'POINT')}]] đ</span>
+            </h5>
+            <!--                        <div ng-if="voucher.isValid == true" class="show-note error-message" >Tổng tiền sau khi áp dụng mã khuyến mại</div>-->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cart-right col col-sm-7" style="width: 44%;margin-left: 10px;">
+      <div class="list-items p-3" style="overflow-y: auto;max-height: 500px;margin-top: 11px;">
+        <div class="row">
+          <div th:each="item,state:${products}" class="col-md-3 element-item ">
+            <div class="d-flex w-100 product-item" th:attr="data-order=${order_id}, data-id=${item.Product_id}">
+              <!--            <div class="d-flex w-100 " ng-click="cart.add(item.product_id)" >-->
+              <div class="item-img w-50 ">
+                <img
+                        th:src="@{'/assets/images/' + ${item.Image1}|}"
+                        style="width: 50px; height: 50px"
+                />
+              </div>
+              <div class="infor-item w-70 ">
+                <h5 class="item-name" style="margin: 0px; font-size: 13px" th:text="${item.name}"></h5>
+                <div class="item-quantity" style="ont-size: 13px" id="item_{{item.product_id}}" th:text="'x ' + ${item.quantity}"></div>
+                <div class="item-price" style="font-size: 11px" th:text="${#numbers.formatDecimal(item.unit_price , 0 ,
+										'COMMA',0,'POINT')} + ' đ'"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cart-right-footer" style="    padding-bottom: 22px !important;">
+        <div class="clearfix">
+          <div class="pagination-items pull-left">
+            <ul class="list-pagination pagination-sm ">
+              <li class="page-item">
+                <a class="btn-icon btn-icon-bg-default" th:href="@{'/admin/orderpending/edit/' + ${order_id} + '/add?pageNumber=' + ${pageNumber - 1}}">
+                  <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                </a>
+              </li>
+              <li class="page-item d-flex align-items-center">
+                <h6 class="number-pages" th:text="@{${pageNumber + 1} + '/' + ${countPage}}"></h6>
+              </li>
+              <li class="page-item">
+                <a class="btn-icon btn-icon-bg-default" th:href="@{'/admin/orderpending/edit/' + ${order_id} + '/add?pageNumber=' + ${pageNumber + 1}}">
+                  <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+</main>
+
+</body>
+
+</html>
